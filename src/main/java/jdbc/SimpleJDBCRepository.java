@@ -58,14 +58,12 @@ public class SimpleJDBCRepository {
     public User findUserByName(String userName) {
         try(Connection connection = CustomDataSource.getInstance().getConnection()) {
             ps = connection.prepareStatement(findUserByNameSQL);
-            String firstname = userName.split(" ")[0];
-            String lastname = userName.split(" ")[1];
-            ps.setString(1, firstname);
-            ps.setString(2, lastname);
+            ps.setString(1, userName);
             ResultSet set = ps.executeQuery();
             Long id = set.getLong(1);
+            String lastname = set.getString(3);
             int age = set.getInt(4);
-            return new User(id, firstname, lastname, age);
+            return new User(id, userName, lastname, age);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -89,24 +87,24 @@ public class SimpleJDBCRepository {
         }
     }
 
-    public User updateUser(Long id) {
+    public User updateUser(User user) {
         try(Connection connection = CustomDataSource.getInstance().getConnection()) {
             ps = connection.prepareStatement(updateUserSQL);
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setInt(3, user.getAge());
+            ps.setLong(4, user.getId());
             ps.executeUpdate();
-            ResultSet set = ps.executeQuery(findUserByIdSQL);
-            String firstname = set.getString(2);
-            String lastname = set.getString(3);
-            int age = set.getInt(4);
-            return new User(id, firstname, lastname, age);
+            return user;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void deleteUser(User user) {
+    private void deleteUser(Long userId) {
         try(Connection connection = CustomDataSource.getInstance().getConnection()) {
             ps = connection.prepareStatement(deleteUser);
-            ps.setLong(1, user.getId());
+            ps.setLong(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
