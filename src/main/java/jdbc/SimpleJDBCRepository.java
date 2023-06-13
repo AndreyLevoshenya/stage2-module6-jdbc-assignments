@@ -103,10 +103,10 @@ public class SimpleJDBCRepository {
         }
     }
 
-    private void deleteUser(Long userId) {
+    private void deleteUser(User user) {
         try(Connection connection = CustomDataSource.getInstance().getConnection()) {
             ps = connection.prepareStatement(deleteUser);
-            ps.setLong(1, userId);
+            ps.setLong(1, user.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
