@@ -1,6 +1,5 @@
 package jdbc;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.Setter;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -28,7 +28,8 @@ public class SimpleJDBCRepository {
     private static final String findAllUserSQL = "SELECT * FROM myusers";
 
     public Long createUser(User user) {
-        try(Connection connection = CustomDataSource.getInstance().getConnection()) {
+        try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(createUserSQL);
             ps.setLong(1, user.getId());
             ps.setString(2, user.getFirstName());
@@ -39,11 +40,18 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public User findUserById(Long userId) {
-        try(Connection connection = CustomDataSource.getInstance().getConnection()) {
+        try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(findUserByIdSQL);
             ps.setLong(1, userId);
             ResultSet set = ps.executeQuery();
@@ -54,11 +62,18 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public User findUserByName(String userName) {
-        try(Connection connection = CustomDataSource.getInstance().getConnection()) {
+        try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(findUserByNameSQL);
             ps.setString(1, userName);
             ResultSet set = ps.executeQuery();
@@ -69,11 +84,18 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public List<User> findAllUser() {
-        try(Connection connection = CustomDataSource.getInstance().getConnection()) {
+        try {
+            connection = CustomDataSource.getInstance().getConnection();
             List<User> userList = new ArrayList<>();
             ps = connection.prepareStatement(findAllUserSQL);
             ResultSet set = ps.executeQuery();
@@ -87,12 +109,20 @@ public class SimpleJDBCRepository {
             return userList;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return Collections.emptyList();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
     public User updateUser(User user) {
-        try(Connection connection = CustomDataSource.getInstance().getConnection()) {
+        try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(updateUserSQL);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
@@ -103,16 +133,29 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void deleteUser(Long userId) {
-        try(Connection connection = CustomDataSource.getInstance().getConnection()) {
+        try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(deleteUser);
             ps.setLong(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

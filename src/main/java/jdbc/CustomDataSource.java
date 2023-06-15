@@ -32,7 +32,7 @@ public class CustomDataSource implements DataSource {
             synchronized (CustomDataSource.class) {
                 String driver = "org.postgresql.Driver";
                 String url = "jdbc:postgresql://localhost:5432/postgres";
-                String name = "postgres";
+                String name = "myfirstdb";
                 String password = "user";
                 instance = new CustomDataSource(driver, url, name, password);
             }
