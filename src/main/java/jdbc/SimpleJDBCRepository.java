@@ -37,7 +37,8 @@ public class SimpleJDBCRepository {
             ps.executeUpdate();
             return user.getId();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -51,7 +52,8 @@ public class SimpleJDBCRepository {
             int age = set.getInt(4);
             return new User(userId, firstname, lastname, age);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -65,7 +67,8 @@ public class SimpleJDBCRepository {
             int age = set.getInt(4);
             return new User(id, userName, lastname, age);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -83,7 +86,8 @@ public class SimpleJDBCRepository {
             }
             return userList;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -97,17 +101,18 @@ public class SimpleJDBCRepository {
             ps.executeUpdate();
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
-    private void deleteUser(Long userId) {
+    public void deleteUser(Long userId) {
         try(Connection connection = CustomDataSource.getInstance().getConnection()) {
             ps = connection.prepareStatement(deleteUser);
             ps.setLong(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }
