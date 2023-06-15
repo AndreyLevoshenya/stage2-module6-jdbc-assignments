@@ -5,10 +5,13 @@ import javax.sql.DataSource;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 @Getter
@@ -27,13 +30,34 @@ public class CustomDataSource implements DataSource {
         this.password = password;
     }
 
+    private static Properties loadProperties() {
+        Properties props = new Properties();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        InputStream stream = loader.getResourceAsStream("app.properties");
+        try {
+            props.load(stream);
+            return props;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
     public static CustomDataSource getInstance() {
         if(instance == null) {
             synchronized (CustomDataSource.class) {
-                String driver = "org.postgresql.Driver";
-                String url = "jdbc:postgresql://localhost:5432/postgres";
-                String name = "myfirstdb";
-                String password = "user";
+                Properties properties = loadProperties();
+                String driver = null;
+                String url = null;
+                String password = null;
+                String name = null;
+                if (properties != null) {
+                    driver = properties.getProperty("postgres.driver");
+                    url = properties.getProperty("postgres.url");
+                    password = properties.getProperty("postgres.password");
+                    name = properties.getProperty("postgres.name");
+                }
                 instance = new CustomDataSource(driver, url, name, password);
             }
         }
