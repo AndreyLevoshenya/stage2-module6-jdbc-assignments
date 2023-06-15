@@ -40,12 +40,6 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -62,12 +56,6 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -84,12 +72,6 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -110,13 +92,6 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return Collections.emptyList();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
         }
     }
 
@@ -133,12 +108,6 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -150,12 +119,16 @@ public class SimpleJDBCRepository {
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SimpleJDBCRepository rep = new SimpleJDBCRepository();
+        rep.createUser(new User(55L, "daskd", "csddv", 31));
+        List<User> users = rep.findAllUser();
+
+        for (User user : users) {
+            System.out.printf("%d;%s;%s;%d", user.getId(), user.getFirstName(), user.getLastName(), user.getAge());
         }
     }
 }

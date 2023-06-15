@@ -26,8 +26,8 @@ public class CustomDataSource implements DataSource {
     private CustomDataSource(String driver, String url, String password, String name) {
         this.driver = driver;
         this.url = url;
-        this.name = name;
         this.password = password;
+        this.name = name;
     }
 
     private static Properties loadProperties() {
@@ -58,7 +58,7 @@ public class CustomDataSource implements DataSource {
                     password = properties.getProperty("postgres.password");
                     name = properties.getProperty("postgres.name");
                 }
-                instance = new CustomDataSource(driver, url, name, password);
+                instance = new CustomDataSource(driver, url, password, name);
             }
         }
         return instance;
